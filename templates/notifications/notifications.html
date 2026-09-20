@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Notifications - SocialApp{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="notifications-page">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-8">
+
+            <!-- PAGE HEADER -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0"><i class="bi bi-bell me-2"></i> Notifications</h4>
+
+                {% if unread_count > 0 %}
+                <form action="{% url 'mark_all_notifications_read' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        <i class="bi bi-check2-all me-1"></i> Mark All as Read
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            <!-- NOTIFICATIONS LIST -->
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                {% if notifications %}
+                    <div class="list-group list-group-flush">
+                        {% for notification in notifications %}
+                        <div class="list-group-item list-group-item-action {% if not notification.is_read %}bg-light-blue{% endif %} d-flex align-items-center py-3">
+
+                            <!-- Notification Type Icon -->
+                            <div class="me-3 fs-4">
+                                {% if notification.notification_type == 'follow' %}
+                                    <i class="bi bi-person-plus-fill text-primary"></i>
+                                {% elif notification.notification_type == 'like' %}
+                                    <i class="bi bi-heart-fill text-danger"></i>
+                                {% elif notification.notification_type == 'comment' %}
+                                    <i class="bi bi-chat-fill text-info"></i>
+                                {% endif %}
+                            </div>
+
+                            <!-- Avatar -->
+                            <div class="avatar-sm me-3 bg-light rounded-circle text-secondary d-flex align-items-center justify-content-center">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex-grow-1">
+                                <p class="mb-0 text-dark">
+                                    <a href="{% url 'user_profile' notification.sender.username %}" class="text-decoration-none fw-bold text-dark">
+                                        {{ notification.sender.username }}
+                                    </a>
+                                    {% if notification.notification_type == 'follow' %}
+                                        started following you.
+                                    {% elif notification.notification_type == 'like' %}
+                                        liked your <a href="{% url 'post_detail' notification.post.pk %}" class="fw-medium text-decoration-none text-primary">post</a>.
+                                    {% elif notification.notification_type == 'comment' %}
+                                        commented on your <a href="{% url 'post_detail' notification.post.pk %}" class="fw-medium text-decoration-none text-primary">post</a>.
+                                    {% endif %}
+                                </p>
+                                <small class="text-muted d-block mt-1">
+                                    <i class="bi bi-clock me-1"></i>{{ notification.created_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            <!-- Right Action Area -->
+                            <div class="d-flex align-items-center">
+                                <!-- Post Image Thumbnail -->
+                                {% if notification.post and notification.post.image %}
+                                <a href="{% url 'post_detail' notification.post.pk %}" class="ms-3">
+                                    <img src="{{ notification.post.image.url }}" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" alt="Post">
+                                </a>
+                                {% endif %}
+
+                                <!-- Read state / Mark as Read -->
+                                {% if not notification.is_read %}
+                                <div class="ms-3 text-end">
+                                    <form action="{% url 'mark_notification_read' notification.pk %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-link p-0 text-primary" title="Mark as read">
+                                            <i class="bi bi-circle-fill" style="font-size: 0.6rem;"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="text-center p-5">
+                        <div class="mb-3">
+                            <i class="bi bi-bell-slash text-muted" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">No notifications yet</h5>
+                        <p class="text-muted mb-0">When someone interacts with your posts, you'll see it here.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

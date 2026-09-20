@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load static %}
+{% load follow_tags %}
+
+{% block title %}{{ profile_user.username }} - SocialMedia{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+<style>
+    /* Additional inline styles for profile */
+    .profile-header-actions .btn {
+        font-weight: 500;
+    }
+
+    .btn-follow {
+        min-width: 100px;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .post-grid-icon {
+        font-size: 1.5rem;
+    }
+
+    .post-grid-stats {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-page container-fluid px-0 px-md-3">
+    <!-- ===== PROFILE HEADER ===== -->
+    <div class="card profile-header-card shadow-sm mb-4 border-0">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <!-- Profile Picture -->
+                <div class="col-md-3 col-lg-2 text-center mb-3 mb-md-0">
+                    <div class="avatar-lg mx-auto d-flex align-items-center justify-content-center bg-light rounded-circle border text-primary mb-2">
+                        <i class="bi bi-person-fill post-grid-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="col-md-9 col-lg-10">
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-3">
+                        <div class="mb-2 mb-md-0">
+                            <h1 class="h2 fw-bold mb-0">{{ profile_user.username }}</h1>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar me-1"></i> Joined {{ profile_user.date_joined|date:"F j, Y" }}
+                            </p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="profile-header-actions">
+                            {% if profile_user == request.user %}
+                                <a href="#" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                                </a>
+                            {% else %}
+                                {% if request.user.is_authenticated %}
+                                    {% if request.user|is_following:profile_user %}
+                                        <!-- Unfollow Button -->
+                                        <form action="{% url 'unfollow_user' profile_user.username %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-follow">
+                                                <i class="bi bi-person-dash me-1"></i> Unfollow
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <!-- Follow Button -->
+                                        <form action="{% url 'follow_user' profile_user.username %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary btn-follow">
+                                                <i class="bi bi-person-plus me-1"></i> Follow
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+                                    <!-- Message Button -->
+                                    <a href="{% url 'chat' username=profile_user.username %}" class="btn btn-outline-primary btn-sm ms-2">
+                                        <i class="bi bi-envelope me-1"></i> Message
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-person-plus me-1"></i> Follow
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="d-flex gap-4 profile-stats mb-3">
+                        <a href="{% url 'following_list' profile_user.username %}" class="text-decoration-none">
+                            <div class="text-center">
+                                <div class="stat-value">{{ profile_user.posts.count }}</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'followers_list' profile_user.username %}" class="text-decoration-none">
+                            <div class="text-center">
+                                <div class="stat-value">{{ profile_user.followers.count }}</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'following_list' profile_user.username %}" class="text-decoration-none">
+                            <div class="text-center">
+                                <div class="stat-value">{{ profile_user.following.count }}</div>
+                                <div class="stat-label">Following</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- User Bio (if available) -->
+                    <div class="mb-2">
+                        <p class="mb-0 text-dark">
+                            {% if profile_user.email %}
+                                <i class="bi bi-envelope text-muted me-1"></i> {{ profile_user.email }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== POSTS GRID ===== -->
+    <div class="posts-grid-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0"><i class="bi bi-grid-3x3-gap me-2"></i> Posts</h4>
+            <span class="text-muted">{{ profile_user.posts.count }} post{{ profile_user.posts.count|pluralize }}</span>
+        </div>
+
+        {% if profile_user.posts.all %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                {% for post in profile_user.posts.all %}
+                <div class="col">
+                    <a href="{% url 'post_detail' post.pk %}" class="text-decoration-none">
+                        <div class="post-grid-item rounded-3 shadow-sm">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="Post by {{ profile_user.username }}" class="img-fluid rounded-3">
+                            {% else %}
+                                <div class="h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted rounded-3">
+                                    <i class="bi bi-card-text mb-2" style="font-size: 2rem;"></i>
+                                    <div class="text-center px-3" style="font-size: 0.85rem;">
+                                        {{ post.content|truncatechars:80 }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- Stats Overlay -->
+                            <div class="post-grid-stats">
+                                <span><i class="bi bi-heart-fill"></i> {{ post.likes.count }}</span>
+                                <span><i class="bi bi-chat-fill ms-2"></i> {{ post.comments.count }}</span>
+                            </div>
+
+                            <!-- Hover Overlay -->
+                            <div class="overlay rounded-3">
+                                <i class="bi bi-eye post-grid-icon"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty Posts State -->
+            <div class="text-center bg-white p-5 rounded-4 shadow-sm border my-4">
+                <div class="mb-4">
+                    <div class="d-inline-block p-4 rounded-circle bg-light text-muted mb-3">
+                        <i class="bi bi-camera fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">No posts yet</h4>
+                    <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">
+                        {% if profile_user == request.user %}
+                            Share your first post to show everyone what you're up to!
+                        {% else %}
+                            {{ profile_user.username }} hasn't shared any posts yet.
+                        {% endif %}
+                    </p>
+                </div>
+                {% if profile_user == request.user %}
+                    <a href="{% url 'create_post' %}" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                        <i class="bi bi-pencil-square me-2"></i> Create your first post
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - SocialMedia{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/feed.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="feed-page">
+
+    <!-- Create Post Button -->
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <h4 class="fw-bold mb-0">Feed</h4>
+        <a href="{% url 'create_post' %}" class="btn btn-primary shadow-sm rounded-pill px-4">
+            <i class="bi bi-pencil-square me-1"></i> New Post
+        </a>
+    </div>
+
+    <!-- Posts Loop -->
+    {% if posts_with_counts %}
+        {% for item in posts_with_counts %}
+        {% with post=item.post %}
+        <div class="card mb-4 post-card shadow-sm border-0">
+            <!-- Post Header -->
+            <div class="card-header bg-white d-flex align-items-center py-3 border-bottom-0">
+                <a href="{% url 'user_profile' post.author.username %}" class="text-decoration-none d-flex align-items-center flex-grow-1">
+                    <div class="avatar-sm me-3 bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fs-5 border">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div>
+                        <div class="text-dark fw-bold mb-0" style="line-height: 1;">{{ post.author.username }}</div>
+                        <small class="text-muted" style="font-size: 0.8rem;">{{ post.created_at|date:"M j, Y \a\t g:i a" }}</small>
+                    </div>
+                </a>
+
+                <!-- Optional Options Menu Placeholder -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-link text-muted text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="False">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li><a class="dropdown-item" href="{% url 'post_detail' post.pk %}"><i class="bi bi-box-arrow-up-right me-2"></i>View Post</a></li>
+                        <!-- Add conditional edit/delete options here if needed -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Post Content (Caption) -->
+            <div class="card-body py-2">
+                <p class="card-text text-dark mb-0" style="white-space: pre-wrap;">{{ post.content }}</p>
+            </div>
+
+            <!-- Post Image -->
+            {% if post.image %}
+            <a href="{% url 'post_detail' post.pk %}">
+                <img src="{{ post.image.url }}" alt="Post by {{ post.author.username }}" class="img-fluid post-image border-top border-bottom">
+            </a>
+            {% endif %}
+
+            <!-- Interaction Stats (Counts) -->
+            <div class="px-3 py-2 d-flex justify-content-between align-items-center border-top">
+                <div class="text-muted small">
+                    {% if item.like_count > 0 %}
+                    <i class="bi bi-heart-fill text-danger me-1"></i> {{ item.like_count }} like{{ item.like_count|pluralize }}
+                    {% endif %}
+                </div>
+                <div class="text-muted small">
+                    {% if item.comment_count > 0 %}
+                    {{ item.comment_count }} comment{{ item.comment_count|pluralize }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Post Actions -->
+            <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                <div class="d-flex justify-content-around post-actions">
+                    <!-- Like/Unlike Button -->
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'interactions:toggle_like' post.pk %}" method="post" class="flex-grow-1 mx-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="home">
+                        <button type="submit" class="btn w-100 {% if item.user_has_liked %}btn-light text-danger{% else %}btn-light text-muted{% endif %} rounded-3 py-2" title="{% if item.user_has_liked %}Unlike{% else %}Like{% endif %}">
+                            <i class="bi {% if item.user_has_liked %}bi-heart-fill{% else %}bi-heart{% endif %} me-1"></i>
+                            {% if item.user_has_liked %}Liked{% else %}Like{% endif %}
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="flex-grow-1 mx-1">
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn w-100 btn-light text-muted rounded-3 py-2" title="Log in to like">
+                            <i class="bi bi-heart me-1"></i> Like
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <!-- Comment Button -->
+                    <div class="flex-grow-1 mx-1">
+                        <a href="{% url 'post_detail' post.pk %}" class="btn w-100 btn-light text-muted rounded-3 py-2">
+                            <i class="bi bi-chat me-1"></i> Comment
+                        </a>
+                    </div>
+
+                    <!-- Share Button (Placeholder) -->
+                    <div class="flex-grow-1 mx-1 d-none d-sm-block">
+                        <button class="btn w-100 btn-light text-muted rounded-3 py-2" onclick="showAlert('Share feature coming soon!');">
+                            <i class="bi bi-share me-1"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    {% else %}
+        <!-- Empty Feed State -->
+        <div class="text-center bg-white p-5 rounded-4 shadow-sm border my-4">
+            <div class="mb-4">
+                <div class="d-inline-block p-4 rounded-circle bg-light text-primary mb-3">
+                    <i class="bi bi-journal-plus fs-1"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-2">Welcome to your feed!</h4>
+                <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">
+                    When you follow people or when people create posts, they'll show up here.
+                </p>
+            </div>
+            <a href="{% url 'create_post' %}" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-pencil-square me-2"></i> Write your first post
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

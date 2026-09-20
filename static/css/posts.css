@@ -1,0 +1,302 @@
+/* ===== POSTS STYLES ===== */
+
+/* --- Post Create --- */
+.create-post-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+
+.create-post-page .card {
+    border-radius: 16px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.create-post-page .card-body {
+    padding: 1.75rem;
+}
+
+.create-post-page h4 {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1.25rem;
+}
+
+.create-post-page .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.create-post-page .form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.create-post-page .form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.create-post-page textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.create-post-page .form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.35rem;
+}
+
+.create-post-page .text-danger {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.create-post-page .btn-primary {
+    border-radius: 10px;
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.create-post-page .btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+.create-post-page .btn-outline-secondary {
+    border-radius: 10px;
+    padding: 0.65rem 1.25rem;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* Image Preview */
+#createPostImagePreview img {
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    max-width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .create-post-page {
+        padding-top: 1rem;
+    }
+    .create-post-page .card-body {
+        padding: 1.25rem;
+    }
+    .create-post-page h4 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* --- Post Detail --- */
+.post-detail-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+
+.post-detail-page .card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.post-detail-page .card-header {
+    border-bottom: 1px solid #f1f3f5;
+    padding: 1rem 1.25rem;
+    background-color: #fff;
+}
+
+.post-detail-page .card-body {
+    padding: 1.25rem;
+}
+
+.post-detail-page .card-footer {
+    border-top: 1px solid #f1f3f5;
+    background-color: #fff;
+    padding: 1rem 1.25rem;
+}
+
+/* Post Header */
+.post-detail-page .avatar-sm {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #f1f3f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    flex-shrink: 0;
+}
+
+.post-detail-page .card-header h5 {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0;
+}
+
+.post-detail-page .card-header small {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Post Image */
+.post-detail-page img.img-fluid {
+    max-height: 600px;
+    object-fit: contain;
+    width: 100%;
+    background-color: #f8f9fa;
+}
+
+.post-detail-page .bg-light {
+    background-color: #f8f9fa !important;
+}
+
+/* Action Buttons */
+.post-detail-page .btn-outline-danger {
+    border: 1.5px solid #dc3545;
+    color: #dc3545;
+    background-color: transparent;
+    border-radius: 50px;
+    padding: 0.35rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.post-detail-page .btn-outline-danger .bi-heart-fill {
+    margin-right: 0.25rem;
+}
+
+.post-detail-page .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+
+.post-detail-page .btn-danger {
+    border-radius: 50px;
+    padding: 0.35rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+}
+
+/* Stats */
+.post-detail-page .text-muted.small {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Caption */
+.post-detail-page .card-body p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #212529;
+}
+
+.post-detail-page .card-body strong {
+    font-weight: 700;
+    color: #212529;
+    margin-right: 0.25rem;
+}
+
+/* Comments Section */
+.post-detail-page .card-footer h6 {
+    font-weight: 700;
+    color: #212529;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+}
+
+.post-detail-page .card-footer form .form-control {
+    border-radius: 10px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.9rem;
+    border: 1px solid #ced4da;
+}
+
+.post-detail-page .card-footer form .btn-primary {
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Individual Comment */
+.post-detail-page .border-top {
+    border-top: 1px solid #e9ecef !important;
+}
+
+.post-detail-page .card-footer .d-flex strong {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.post-detail-page .card-footer .small p {
+    font-size: 0.9rem;
+    color: #495057;
+    line-height: 1.5;
+}
+
+.post-detail-page .card-footer .text-muted {
+    font-size: 0.75rem;
+}
+
+/* Comment Delete Button */
+.post-detail-page .btn-outline-danger.btn-sm {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    border-width: 1px;
+    border-radius: 6px;
+}
+
+/* Dropdown Menu */
+.post-detail-page .dropdown .btn-light {
+    border: none;
+    background: transparent;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.post-detail-page .dropdown .btn-light:hover {
+    background-color: #f0f0f0;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .post-detail-page {
+        padding-top: 1rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .post-detail-page .card-header,
+    .post-detail-page .card-body,
+    .post-detail-page .card-footer {
+        padding: 0.75rem 1rem;
+    }
+
+    .post-detail-page .avatar-sm {
+        width: 36px;
+        height: 36px;
+    }
+
+    .post-detail-page .card-body p {
+        font-size: 0.95rem;
+    }
+}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search - SocialApp{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="search-page">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-10">
+
+            <!-- Search Header -->
+            <div class="mb-4">
+                <h4 class="fw-bold mb-3"><i class="bi bi-search me-2 text-primary"></i> Search</h4>
+                <form method="GET" action="{% url 'search' %}">
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        {{ form.query }}
+                        <button type="submit" class="btn btn-primary px-4">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Initial state: No query entered yet -->
+            {% if not query %}
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Search for people or posts</h5>
+                    <p class="text-muted">Explore the community by searching for usernames or content.</p>
+                </div>
+
+            <!-- Query entered: Show results -->
+            {% else %}
+
+                <!-- ===== USER RESULTS (People) ===== -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-dark mb-3">People</h5>
+
+                    {% if users %}
+                        <div class="list-group shadow-sm border-0">
+                            {% for user in users %}
+                            <a href="{% url 'user_profile' user.username %}" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                                <div class="avatar-sm me-3 border rounded-circle bg-light d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-person-fill text-muted"></i>
+                                </div>
+                                <span class="fw-bold text-dark">{{ user.username }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="card card-body border-0 shadow-sm text-center py-4">
+                            <p class="text-muted mb-0">No results found.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- ===== POST RESULTS (Posts) ===== -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-dark mb-3">Posts</h5>
+
+                    {% if posts %}
+                        {% for post in posts %}
+                        <div class="card mb-3 shadow-sm border-0 rounded-4">
+                            <div class="card-body">
+                                <!-- Post Header -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="avatar-sm me-2 border rounded-circle bg-light d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-fill text-muted"></i>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'user_profile' post.author.username %}" class="text-dark text-decoration-none fw-bold">
+                                            {{ post.author.username }}
+                                        </a>
+                                        <small class="text-muted d-block" style="font-size: 0.8rem;">
+                                            <i class="bi bi-clock me-1"></i>{{ post.created_at|timesince }} ago
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Post Content -->
+                                <p class="card-text text-dark mb-3">{{ post.content }}</p>
+
+                                <!-- Post Image -->
+                                {% if post.image %}
+                                    <div class="mb-3">
+                                        <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded-3" style="width: 100%; max-height: 400px; object-fit: cover;">
+                                    </div>
+                                {% endif %}
+
+                                <!-- Link to post detail -->
+                                <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                    <i class="bi bi-arrow-right"></i> View Post
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card card-body border-0 shadow-sm text-center py-4">
+                            <p class="text-muted mb-0">No results found.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

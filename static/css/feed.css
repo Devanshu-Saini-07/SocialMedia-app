@@ -1,0 +1,27 @@
+/* ===== FEED STYLES ===== */
+.post-card {
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.post-card:hover {
+    /* Optional: subtle lift effect */
+    /* transform: translateY(-2px); */
+}
+
+.avatar-sm {
+    width: 40px;
+    height: 40px;
+}
+
+.post-actions .btn {
+    font-weight: 500;
+}
+
+/* Ensure images maintain aspect ratio and don't break layout */
+.post-image {
+    max-height: 500px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    width: 100%;
+}

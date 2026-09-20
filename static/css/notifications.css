@@ -1,0 +1,47 @@
+/* ===== NOTIFICATIONS STYLES ===== */
+
+.notifications-page {
+    max-width: 650px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+}
+
+/* Subtle background for unread notifications */
+.bg-light-blue {
+    background-color: #f1f8ff !important;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    transition: background-color 0.2s ease;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Make unread hover slightly darker blue */
+.list-group-item.bg-light-blue:hover {
+    background-color: #e6f2ff !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .notifications-page {
+        padding-top: 0;
+    }
+
+    .list-group-item {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}

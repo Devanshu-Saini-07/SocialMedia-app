@@ -1,0 +1,12 @@
+# Django Project
+myenv/
+__pycache__/
+*.pyc
+.env
+db.sqlite3
+media/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

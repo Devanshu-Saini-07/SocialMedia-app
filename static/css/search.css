@@ -1,0 +1,51 @@
+/* ===== SEARCH STYLES ===== */
+
+.search-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+/* Override Bootstrap input-group */
+.input-group-lg > .form-control,
+.input-group-lg > .input-group-text,
+.input-group-lg > .btn {
+    border-radius: 50px !important;
+}
+
+.input-group-lg > .input-group-text {
+    padding-left: 1.25rem;
+    border: 1px solid #ced4da;
+    border-right: none;
+}
+
+.input-group-lg > .form-control {
+    border: 1px solid #ced4da;
+    border-left: none;
+    padding-left: 0.5rem;
+}
+
+.input-group-lg > .btn {
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Avatar small helper */
+.avatar-sm {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+}
+
+@media (max-width: 576px) {
+    .search-page {
+        padding-top: 0.75rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}

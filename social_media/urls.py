@@ -16,16 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("accounts/", include("accounts.urls")),
-    path("posts/", include("posts.urls")),
-    path("feed/", include("feed.urls")),
-    path("interactions/", include("interactions.urls")),
-    path("follows/", include("follows.urls")),
-    path("notifications/", include("notifications.urls")),
-    path("messaging/", include("messaging.urls")),
-    path("search/", include("search.urls")),
-]
+    path("", include("social_media.feed.urls")),  # Root URL shows home feed
+    path("accounts/", include("social_media.accounts.urls")),
+    path("posts/", include("social_media.posts.urls")),
+    path("feed/", include("social_media.feed.urls")),  # Keep /feed/ route for compatibility
+    path("interactions/", include("social_media.interactions.urls")),
+    path("follows/", include("social_media.follows.urls")),
+    path("notifications/", include("social_media.notifications.urls")),
+    path("messaging/", include("social_media.messaging.urls")),
+    path("search/", include("social_media.search.urls")),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
