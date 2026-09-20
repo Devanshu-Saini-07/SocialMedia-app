@@ -45,8 +45,15 @@ if not SECRET_KEY:
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app').split(',')
 vercel_url = os.environ.get('VERCEL_URL')
 if vercel_url:
-    ALLOWED_HOSTS.append(vercel_url.replace('https://', '').replace('http://', '').replace('/', ''))
-ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
+    # VERCEL_URL is often just the host, but sometimes might have protocols
+    # Normalize to hostname only (e.g., socialmedia-app-ebon.vercel.app)
+    host = vercel_url.replace('https://', '').replace('http://', '').strip('/')
+    ALLOWED_HOSTS.append(host)
+    # Also add the root domain wildcard if not already present
+    if not any(h.endswith('.vercel.app') for h in ALLOWED_HOSTS if h):
+        ALLOWED_HOSTS.append('.vercel.app')
+# Deduplicate and remove any potential empty strings
+ALLOWED_HOSTS = list(set(h for h in ALLOWED_HOSTS if h))
 
 
 # Application definition
